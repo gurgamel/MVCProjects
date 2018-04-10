@@ -1,0 +1,138 @@
+﻿@model SportsStore.Domain.Entities.Product
+
+@{
+    ViewBag.Title = "Admin: Edit " + @Model.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
+    <!--If you want to disable jquery client-side validation. By default it is on.
+        You can disable it for the whole app by adding this to the web config:
+
+        <appSetting>
+        <add key="ClientValidationEnabled value="false"/>
+        <add key="UnobtrusiveJavaScriptEnabled value="false"/>
+        </appSettings>
+
+        Even when it is enabled, it doesn't work because we were not able
+        to load the right jquery scripts from nuget:
+
+        install-package Microsoft.jquery.Unobtrusive.Validation -version 3.0.0 -projectname SportsStore.WebUI
+        
+        The above statement fails because there is already a newer vesion of jquery present,
+        but it does not have the corresponding validation scripts.
+
+
+        -->
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3>Edit @Model.Name</h3>
+    </div>
+
+    <!--By default the form posts back to the coroller action that rendered it.
+        Here we are explicitly posting to the edit method on the Admin controller
+        so we can handle Create as well as Edit.
+        
+        This is being modified so it can support image uploads.
+        The FormMethod param has been added to the BeginForm.
+        The enctype ensures that the whole file is uploaded, not just its name.
+        
+        -->
+    @using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel-body">
+            <!--We need the product ID to be here or else if won't get 
+                passed back to the Edit method when the form is posted.
+                Model binding finds the html element and maps it value
+                into a property of the posted Product object, which arrives
+                as a param to the Edit method in the Admin controller.-->
+            @Html.Hidden("ProductID", @Model.ProductID)
+
+            <!--Do text boxes for the other properties of the Product object-->
+            @foreach (var property in ViewData.ModelMetadata.Properties)
+            {
+                if (property.PropertyName != "ProductID")
+                {
+                    <!--Switch added to support image uploads-->
+                    switch (property.PropertyName)
+                    {
+                        case "ProductID":
+                        case "ImageData":
+                        case "ImageMimeType":
+                            //do nothing
+                            break;
+                        default:
+                    
+                        <div class="form-group">
+                            <!--If there is a DisplayName attribute in the model, use it,
+                                otherwise just display the property name-->
+                            <label>@(property.DisplayName ?? property.PropertyName)</label>
+                            @if (property.PropertyName == "Description")
+                            {
+                                @Html.TextArea(property.PropertyName, null, new { @class = "form-control", rows = 5 })
+                            }
+                            else
+                            {
+                                @Html.TextBox(property.PropertyName, null, new { @class = "form-control" })
+                            }
+
+                            <!--Display any validation problems under the textbox, and make the textbox red.-->
+                            @Html.ValidationMessage(property.PropertyName)
+
+                        </div>
+            
+                            break;
+            
+                    }
+                    
+                    <!--After switch-->
+                    
+                }
+            }
+
+            <!--After loop. New div for file uploads-->
+            <div class="form-group">
+                <div style="position:relative;">
+                    <label>Image</label>
+
+                    <!--Bootstrap does not properly style file uploads. So the mess of js and CSS below
+                        in the input tag is getting around that.-->
+                    <a class='btn' href='javascript:;'>
+                        Choose File...
+                        <input type="file" name="Image" size="40"
+                               style="position:absolute; z-index:2; top:0; background-color:transparent; color:transparent;"
+                               onchange='$("#upload-file-info").html($(this).val());' />
+                    </a>
+
+                    <span class='label label-info' id="upload-file-info"></span>
+
+                </div>
+
+                <!--Show a thmbnail if we have an image-->
+                @if(Model.ImageData == null)
+                {
+                    <div class="form-control-static">No Image</div>
+                }
+                else
+                {
+                    <img class="img-thumbnail" width="150" height="150" src="@Url.Action("GetImage", "Product", new { Model.ProductID}) " />
+                }
+                
+
+
+            </div>
+
+        </div>
+
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to List", "Index", null, new
+       {
+           @class = "btn btn-default"
+       })
+        </div>
+    }
+</div>

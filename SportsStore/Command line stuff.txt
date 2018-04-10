@@ -1,0 +1,38 @@
+You have to run all this crap just to create the project.
+The Angular part of the project ends up in SprotsStore/ClientApp.
+The MVC part is the rest of it.
+
+ng new SportsStore --skip-git --skip-commit --skip-tests --source-dir ClientApp
+
+cd SportsStore
+
+npm install --save-dev webpack@2.3.2 aspnet-prerendering@2.0.3 aspnet-webpack@1.0.28 webpack-hot-middleware@2.17.1
+
+ng eject
+
+npm install
+
+dotnet new mvc --language C# --auth None --framework netcoreapp1.1
+
+The above line fails "netcoreapp1.1 is not a valid option for --framework".
+This might be becasue I have installed VS2017 which installs Core 2.0,
+even though I clicked the option to include Core 1.1 as well.
+
+Ran it again without the --framework. It has completed without errors
+but I don't know if it will work.
+Looking at the project file in notepad I can see that it is targeting Core 2.0.
+
+Next...
+dotnet add package Microsoft.AspNetCore.SpaServices --version 1.1.0
+This installs a whole raft of dependencies, and it says it has downgraded some of them.
+
+dotnet add package Microsoft.EntityFrameworkCore --version 1.1.1
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 1.1.1
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 1.1.1
+
+Now we have to go and hack the csproj from within VS2017.
+
+I cannot get started with the Angular book.
+Decided to try Jquery UI.
+
+

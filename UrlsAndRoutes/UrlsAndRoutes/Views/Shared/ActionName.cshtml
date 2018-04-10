@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ActionName</title>
+</head>
+<body>
+    <div> 
+        Controller is: @ViewBag.Controller
+    </div>
+
+    <div>
+        The action is: @ViewBag.Action
+    </div>
+
+    <!--If a custom segment variable such as "id" has been used in the RouteConfig,
+        the controller can access it and put it in the ViewBag.-->
+    <div>
+        Custom Segment Variable of ID has a value of @ViewBag.CustomSegVar
+    </div>
+
+</body>
+</html>

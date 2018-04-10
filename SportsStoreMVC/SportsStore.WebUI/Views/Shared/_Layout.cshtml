@@ -1,0 +1,52 @@
+﻿
+<!--This is default layout. 
+    It acts like a Master page in the old asp.net forms.
+    It is called by the default view (_ViewStart) whenever a controller method calls its own view.
+    When a controller method calls a specific view, this view renders first,
+    then the specific view is slotted in where it says RenderBody().
+    -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+
+    <!--Styles added for the validation errors-->
+    <link href="~/Content/ErrorStyles.css" rel="stylesheet" />
+
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+
+    <div class="navbar navbar-inverse" role="navigation">
+        <a class="navbar-brand" href="#">SPORTS STORE</a>
+        <!--Call the Summary method on the Cart controller to produce
+            a partial view which shows a cart summary-->
+        @Html.Action("Summary", "Cart")
+
+    </div>
+
+    <div class="row panel">
+        <div id="categories" class="col-xs-3">
+            <!--Call the Menu method on the Nav controller
+                to produce a partial view which is the menu in the left sidebar.-->
+            @Html.Action("Menu", "Nav")
+
+        </div>
+
+        <div class="col-xs-8">
+            
+            @RenderBody()
+
+        </div>
+
+
+    </div>
+
+
+</body>
+</html>

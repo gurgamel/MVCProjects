@@ -1,0 +1,55 @@
+﻿@model SportsStore.Domain.Entities.ShippingDetails
+
+@{
+    ViewBag.Title = "SportsStore: Checkout";
+}
+
+<!--This view is called by the Checkout method on the CartController-->
+
+<h2>Check out now</h2>
+<p>Please enter your details, and we'll ship your goods right away</p>
+
+@using (Html.BeginForm())
+{
+    <!--This will produce the HTML to display any validation problems with the model.
+        The incoming ShippingDetails has DataValidation attributes.
+        If they fail, the ModelState.IsValid goes false.
+        It means that all the vaidation errors are lists at the top of the screen.
+        There is a nicer approach in the product Edit view (Views/Admin/Edit), which turns the offending
+        control red and displays the error message next to it.
+        -->
+    @Html.ValidationSummary()
+    <h3>Ship to</h3>
+    <div class="form-group">
+        <label>Name:</label>
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+    </div>
+
+    <h3>Address</h3>
+
+    foreach (var property in ViewData.ModelMetadata.Properties)
+    {
+        if ( (property.PropertyName != "Name") && (property.PropertyName != "Giftwrap")  )
+        {
+            <div class="form-group">
+                <label>@(property.DisplayName ?? property.PropertyName)</label>
+                @Html.TextBox(  property.PropertyName, null, new { @class = "form-control" })
+            </div>
+
+        }
+    }
+
+    <h3>Options</h3>
+    <div class="checkbox">
+        <label>
+            @Html.EditorFor(x => x.Giftwrap)
+            Gift wrap these items
+        </label>
+    </div>
+
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="Complete order" />
+    </div>
+}
+
+

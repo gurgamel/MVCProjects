@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ActionName</title>
+</head>
+<body>
+    <div>
+        Controller is: @ViewBag.Controller
+    </div>
+
+    <div>
+        The action is: @ViewBag.Action
+    </div>
+
+    <div>
+        The ViewBag.SomeValue holds: @ViewBag.SomeValue
+    </div>
+
+    <!--This create a link (anchor tag) which points at an action method on the Home controller.
+         The second param is the name of an action method we want the link to point at.
+         It emits this:
+         <a href="/Home/CustomAction">This is an outgoing url </a>
+
+         The link includes the "Home" controller segment because this view was called
+         from the Home controller. If you change the RouteConfig so a different controller
+         calls this view, the url will be constructed using the new controller name.
+
+         -->
+    <div>  @Html.ActionLink("This is an outgoing Url which points to the controller which called this view", "CustomAction")    </div>
+
+    <!--There is an overload which takes an explicit controller name, rather than the one which called this view.-->
+
+    <div>  @Html.ActionLink("This is an outgoing Url using an explicit controller", "CustomAction", "Home")    </div>
+
+    <!--This targets the controller which called this view, and sends a param to its CustomAction method.
+        The CustomAction method put the param in the ViewBag.SomeValue and calls the view again.-->
+
+    <div>  @Html.ActionLink("Target the default controller and send a param of Hello", "CustomAction", new { id = "Hello from default" })    </div>
+
+    <!--THIS DOES NOT WORK. We cannot use an explicit controller and send a param.
+        But we can build an anchor tag with Url.Action, see below.
+                -->
+    <div>  @Html.ActionLink("Target an explicit controller and send a param of Hello", "CustomAction", "Home", new { id = "Hello from Home" })    </div>
+
+    <!--Building an anchor tag with Url.Action to create a url which uses the routing. -->
+    <div>@Url.Action("CustomAction", "Home", new { id = "Hello with spaces" })</div>
+    <div><a href=@Url.Action("CustomAction", "Home", new { id = "Hello with spaces" })>Use url.action</a></div>
+
+</body>
+</html>

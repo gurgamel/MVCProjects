@@ -1,0 +1,54 @@
+﻿@using SportsStore.Domain.Entities;
+
+@model SportsStore.WebUI.Models.ProductsListViewModel
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<!--For each Product in the ProductsListViewModel-->
+@foreach (var p in Model.Products)
+{
+    <!--Display a partial view named ProductSummary, which is a shared view. -->
+    @Html.Partial("ProductSummary", p)   
+    
+    <!--Instead of this
+    <div class="well">
+        <h3>
+            <strong>@p.Name</strong>
+            <span class="pull-right label label-primary">@p.Price.ToString("c")</span>
+        </h3>
+
+        <span class="lead"> @p.Description</span>
+
+    </div>
+        -->
+}
+
+<div class="pager">
+    <!--Create the Html for the page numbers. 
+        Call the extension method we added to the Html helper (PageLinks).
+        Passing in the pagingInfo object that we have received from the controller in the ViewModel,
+        and a delegate which points at the List action method from the controller, which requires a page number.
+        
+        This means that clicking on the link calls the List method again with a different page number.
+        The new page number gets passed in again as part of the ViewModel, so we know which page we are on.
+        Each link (anchor tag) contains the number of a page.
+
+        The call to PageLinks emits the Html for the anchor tags.
+        The href in the anchor tag points at a method which creates the new page url.
+        It is this method which we are passing as the second param (as a delegate/anon method).
+        The delegate is defined with a llamda expression. Not sure what "x" is.
+
+        Url.Action is a helper which generates a link or url. So it produces
+        a url which points to the List method on the ProductController, and passes a page number to it.
+
+        The Url.Action takes the name of the method to call on the controller (List)
+        and an array of param for the List method. These are Page and Category.
+    -->
+    
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new {page = x, category = Model.CurrentCategory }))
+
+</div>
+
+

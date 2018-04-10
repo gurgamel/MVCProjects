@@ -1,0 +1,53 @@
+﻿<!--Login view. Gets called by the Login method on the AccountController-->
+
+@model SportsStore.WebUI.Models.LoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3> Log In</h3>
+
+    </div>
+
+    <div class="panel-body">
+        <p class="lead">Please log in to access the admin area</p>
+
+        <!--
+            We have been redirected here when we attempted to access Admin/Index.
+            There was no cookie to say we had been authenticated, so we were sent to 
+            the view defined in authentication section of the web.config, ie here.
+        
+            This form posts back to Login method on the Account controller.
+            Presumably it knows to do this because it is view the called Login,
+            so there is a convention connection.
+            
+            When this form submits, it sends two params to the Login method on the Account controller.
+            An instance of the LoginViewModel, populated with the username and password, 
+            and a returnUrl containing "Admin/Index" which is the url we were orginally try to get to.
+            I don't know how it knows this url.
+
+            -->
+        
+
+        @using(Html.BeginForm())
+        {
+            @Html.ValidationSummary()
+            <div class="form-group">
+                <label>User Name:</label>
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            </div>
+            
+            <input type="submit" value="Log In" class="btn btn-primary"/>
+
+        }
+    </div>
+</div>

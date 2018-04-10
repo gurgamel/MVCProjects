@@ -1,0 +1,53 @@
+﻿@using IdentityManual.Models
+@model IEnumerable<AppUser>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        User Accounts
+    </div>
+    <!--Put all the users from the incoming list of AppUser objects into a table-->
+    <table class="table table-striped">
+
+        <!--The header row has an empty col for the Edit and Delete buttons-->
+        <tr><th>ID</th><th>Name</th><th>Email</th><th></th></tr>
+        
+        @if (Model.Count() == 0)
+        {
+            <tr><td colspan="4" class="text-center">No User Accounts</td></tr>
+        }
+        else
+        {
+            foreach (AppUser user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <!--The edit button in col 4-->
+                    <td>
+                        <!--Form which submits to a Delete method on the Admin controller, passing the current user id
+                            via the ViewModel.
+                            The Edit and Delete buttons are inside this form so they both appear in a row.-->
+                        @using (Html.BeginForm("Delete", "Admin", new { id = user.Id }))
+                        {
+                            <!--Edit button from an ActionLink-->
+                            @Html.ActionLink("Edit", "Edit", new { id = user.Id}, new {@class = "btn btn-primary btn-xs"})
+
+                            <!--Delete button. Why not use an ActionLink for this one?-->
+                            <button class="btn btn-danger btn-xs" type = "submit">Delete</button>
+                           
+                        }
+                        <!--End form-->
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+<!--Create a link (anchor tag) which looks like a button, to the Create method on the controller that
+    called this view (Admin)-->
+@Html.ActionLink("Create","Create", null, new { @class = "btn btn-primary"})
+
